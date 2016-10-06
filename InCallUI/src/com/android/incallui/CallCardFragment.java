@@ -273,7 +273,6 @@ public class CallCardFragment extends BaseFragment<CallCardPresenter, CallCardPr
         final Call call = calls.getFirstCall();
         getPresenter().init(getActivity(), call);
         mPu = PhoneUtil.getPhoneUtil(getActivity());
-
     }
 
     @Override
