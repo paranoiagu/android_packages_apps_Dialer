@@ -68,6 +68,7 @@ import com.android.incallui.ringtone.ToneGeneratorFactory;
 
 import java.util.Objects;
 import org.codeaurora.ims.QtiCallConstants;
+import android.suda.utils.SudaUtils;
 
 /**
  * This class adds Notifications to the status bar for the in-call experience.
@@ -533,19 +534,28 @@ public class StatusBarNotifier implements InCallPresenter.InCallStateListener,
         if (call.isConferenceCall() || call.hasProperty(Details.PROPERTY_GENERIC_CONFERENCE)) {
             return mContext.getResources().getString(R.string.card_title_conf_call);
         }
-        if (TextUtils.isEmpty(contactInfo.namePrimary)) {
-            String contactNumberDisplayed = TextUtils.isEmpty(contactInfo.number) ?
-                    "" : contactInfo.number.toString();
-            String location_info = GeoUtil.getGeocodedLocationFor(mContext, contactNumberDisplayed);
-            if (!TextUtils.isEmpty(location_info)){
-                contactNumberDisplayed =  contactNumberDisplayed + " " + location_info;
+        if (SudaUtils.isSupportLanguage(true)) {
+            if (TextUtils.isEmpty(contactInfo.namePrimary)) {
+                return TextUtils.isEmpty(contactInfo.number) ? null
+                        : TextUtils.isEmpty(contactInfo.location) ? BidiFormatter.getInstance().unicodeWrap(
+                            contactInfo.number.toString(), TextDirectionHeuristics.LTR) : BidiFormatter.getInstance().unicodeWrap(
+                                    contactInfo.number.toString() + " " + contactInfo.location, TextDirectionHeuristics.LTR);
             }
-            return TextUtils.isEmpty(contactNumberDisplayed) ? null
-                    : BidiFormatter.getInstance().unicodeWrap(
-                    contactNumberDisplayed, TextDirectionHeuristics.LTR);
+            return !TextUtils.isEmpty(contactInfo.location) ? contactInfo.namePrimary + " " + contactInfo.location : contactInfo.namePrimary;
+        } else {
+            if (TextUtils.isEmpty(contactInfo.namePrimary)) {
+                String contactNumberDisplayed = TextUtils.isEmpty(contactInfo.number) ?
+                    "" : contactInfo.number.toString();
+                String location_info = GeoUtil.getGeocodedLocationFor(mContext, contactNumberDisplayed);
+                if (!TextUtils.isEmpty(location_info)){
+                        contactNumberDisplayed =  contactNumberDisplayed + " " + location_info;
+                }
+                return TextUtils.isEmpty(contactNumberDisplayed) ? null
+                        : BidiFormatter.getInstance().unicodeWrap(
+                        contactNumberDisplayed, TextDirectionHeuristics.LTR);
+            }
+            return contactInfo.namePrimary;
         }
-
-        return contactInfo.namePrimary;
     }
 
     private void addPersonReference(Notification.Builder builder, ContactCacheEntry contactInfo,
