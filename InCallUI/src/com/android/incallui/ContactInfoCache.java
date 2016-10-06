@@ -70,7 +70,7 @@ public class ContactInfoCache implements ContactsAsyncHelper.OnImageLoadComplete
     private static final String TAG = ContactInfoCache.class.getSimpleName();
     private static final int TOKEN_UPDATE_PHOTO_FOR_CALL_STATE = 0;
 
-    private static Context mContext;
+    private final Context mContext;
     private final PhoneNumberService mPhoneNumberService;
     private final CachedNumberLookupService mCachedNumberLookupService;
     private final HashMap<String, ContactCacheEntry> mInfoMap = Maps.newHashMap();
@@ -564,7 +564,7 @@ public class ContactInfoCache implements ContactsAsyncHelper.OnImageLoadComplete
 
         cce.namePrimary = displayName;
         cce.number = displayNumber;
-        String location = PhoneUtil.getPhoneUtil(mContext).getLocalNumberInfo(cce.number, false);
+        String location = PhoneUtil.getPhoneUtil(context).getLocalNumberInfo(cce.number, false);
         if (!TextUtils.isEmpty(location)) {
             info.geoDescription = location;
             cce.location = info.geoDescription;
