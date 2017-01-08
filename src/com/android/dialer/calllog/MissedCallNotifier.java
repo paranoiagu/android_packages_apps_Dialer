@@ -115,11 +115,10 @@ public class MissedCallNotifier {
                     ? R.string.notification_missedWorkCallTitle
                     : R.string.notification_missedCallTitle;
 
-        CharSequence location = "";
-        if (SudaUtils.isSupportLanguage(true)) {
-            location = PhoneUtil.getPhoneUtil(mContext).getLocalNumberInfo(contactInfo.number);
-        }
-
+            CharSequence location = "";
+            if (SudaUtils.isSupportLanguage(true)) {
+                location = PhoneUtil.getPhoneUtil(mContext).getLocalNumberInfo(contactInfo.number);
+            }
             expandedText = TextUtils.isEmpty(location) ?
                     contactInfo.name : contactInfo.name + " " + location;
             ContactPhotoLoader loader = new ContactPhotoLoader(mContext, contactInfo);
