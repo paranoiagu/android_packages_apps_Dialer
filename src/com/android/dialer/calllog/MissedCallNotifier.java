@@ -38,6 +38,8 @@ import com.android.dialer.list.ListsFragment;
 import com.android.dialer.util.DialerUtils;
 import com.android.dialer.util.IntentUtil;
 import com.android.dialer.util.IntentUtil.CallIntentBuilder;
+import com.sudamod.sdk.phonelocation.PhoneUtil;
+import android.suda.utils.SudaUtils;
 
 import java.util.List;
 
@@ -113,7 +115,13 @@ public class MissedCallNotifier {
                     ? R.string.notification_missedWorkCallTitle
                     : R.string.notification_missedCallTitle;
 
-            expandedText = contactInfo.name;
+        CharSequence location = "";
+        if (SudaUtils.isSupportLanguage(true)) {
+            location = PhoneUtil.getPhoneUtil(mContext).getLocalNumberInfo(contactInfo.number);
+        }
+
+            expandedText = TextUtils.isEmpty(location) ?
+                    contactInfo.name : contactInfo.name + " " + location;
             ContactPhotoLoader loader = new ContactPhotoLoader(mContext, contactInfo);
             Bitmap photoIcon = loader.loadPhotoIcon();
             if (photoIcon != null) {
