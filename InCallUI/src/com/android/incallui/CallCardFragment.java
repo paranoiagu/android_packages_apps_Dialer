@@ -269,10 +269,10 @@ public class CallCardFragment extends BaseFragment<CallCardPresenter, CallCardPr
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        mPu = PhoneUtil.getPhoneUtil(getActivity());
         final CallList calls = CallList.getInstance();
         final Call call = calls.getFirstCall();
         getPresenter().init(getActivity(), call);
-        mPu = PhoneUtil.getPhoneUtil(getActivity());
     }
 
     @Override
